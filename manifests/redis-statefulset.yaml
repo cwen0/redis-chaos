@@ -38,7 +38,7 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
       initContainers:
-        name: "init-redis"
+      - name: "init-redis"
         image: library/redis:3.2
         command: ["bash", "-c", "
           set -ex\n

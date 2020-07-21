@@ -12,24 +12,6 @@ spec:
     metadata:
       labels:
         app: redis-sentinel
-      annotations:
-        pod.beta.kubernetes.io/init-containers: '[
-          {
-            "name": "init-redis",
-            "image": "library/redis:3.2",
-            "command": ["bash", "-c", "
-              set -ex\n
-              [[ `hostname` =~ -([0-9]+)$ ]] || exit 1\n
-              [[ -f /mnt/conf/sentinel.conf ]] && exit 0\n
-              # Copy appropriate conf.d files from config-map to emptyDir.\n
-              cp /mnt/config-map/sentinel.conf /mnt/conf/sentinel.conf\n
-            "],
-            "volumeMounts": [
-              {"name": "conf", "mountPath": "/mnt/conf"},
-              {"name": "config-map", "mountPath": "/mnt/config-map"}
-            ]
-          }
-        ]'
     spec:
       containers:
       - name: redis-sentinel
@@ -54,7 +36,7 @@ spec:
           initialDelaySeconds: 15
           timeoutSeconds: 5
       initContainers:
-        name: "init-redis"
+      - name: "init-redis"
         image: library/redis:3.2
         command: ["bash", "-c", "
           set -ex\n
